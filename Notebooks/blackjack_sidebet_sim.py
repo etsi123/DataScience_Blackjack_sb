@@ -3,18 +3,14 @@ import numpy as np
 from random import shuffle
 
 class Blackjack_shoe:
-    def __init__(self, num_decks_remaining,running_count,counting_rules,jackpot,expectation,\
-                 avg_rt,lower_rt,upper_rt,small_cards):
+    def __init__(self, num_decks_remaining,running_count,counting_rules,\
+                 small_cards,win_counter):
         self.num_decks_remaining = num_decks_remaining
         self.running_count = running_count
         self.counting_rules = counting_rules
         self.shoe = []
-        self.jackpot=jackpot
-        self.avg_rt = avg_rt
-        self.lower_rt=lower_rt
-        self.upper_rt=upper_rt
         self.small_cards=small_cards
-        self.expectation=expectation
+        self.win_counter = win_counter
 
     def create_shoe(self):
         """
@@ -53,16 +49,13 @@ class Blackjack_shoe:
             if dc1.split('_')[2] == dc2.split('_')[2] == mc1.split('_')[2] == mc2.split('_')[2]: 
                 card_group = [dc1.split('_')[0],dc2.split('_')[0],mc1.split('_')[0],mc2.split('_')[0]]
                 if sorted(card_group) == ['ace', 'jack', 'king', 'queen']: 
-                    if dc1.split('_')[2] == 'diamonds': 
-                        self.expectation = self.expectation+self.jackpot
-                    else: 
-                        self.expectation = self.expectation + self.jackpot/10        
+                    self.win_counter = self.win_counter + 1     
 
     def get_expectation_ranges(self): 
-        return self.expectation/self.upper_rt,self.expectation/self.avg_rt,self.expectation/self.lower_rt
+        return self.win_counter
     
     def summarize_results(self): 
-        print('Average Expectation / hour is :' + str(self.expectation/self.avg_rt))
-        print('Lower limit expectation / hour is :' + str(self.expectation/self.upper_rt))
-        print('Upper limit expectation / hour is :' + str(self.expectation/self.lower_rt))
+        print('Num Decks Remaining is ' + str(self.num_decks_remaining))
+        print('Running Count is ' + str(self.running_count))
+        print('Number of wins is ' + str(self.win_counter))
         
