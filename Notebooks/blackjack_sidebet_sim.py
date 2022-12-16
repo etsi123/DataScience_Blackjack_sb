@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from random import shuffle
+import math
 
 class Blackjack_shoe:
     def __init__(self, num_decks_remaining,running_count,counting_rules,\
@@ -58,4 +59,21 @@ class Blackjack_shoe:
         print('Num Decks Remaining is ' + str(self.num_decks_remaining))
         print('Running Count is ' + str(self.running_count))
         print('Number of wins is ' + str(self.win_counter))
-        
+    
+    def simulate_blackjack_shoe(self,deck_penetration):
+        shuffle(self.shoe)
+        sol = []
+        numcards = len(self.shoe)
+        cut_card = int(numcards*deck_penetration)
+        running_count = 0
+        num_decks_remaining = len(self.shoe) / 52
+        while len(self.shoe) >= (numcards - cut_card): 
+            for i in range(0,10): #10 cards per round 
+                card = self.shoe.pop(0)
+                running_count = running_count + self.counting_rules[card] 
+            num_decks_remaining = math.ceil(len(self.shoe)/52)
+            sol.append([num_decks_remaining,running_count])
+        return sol
+
+
+
