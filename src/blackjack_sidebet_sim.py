@@ -12,6 +12,7 @@ class Blackjack_shoe:
         self.shoe = []
         self.small_cards=small_cards
         self.win_counter = win_counter
+        self.money_won = 0
 
     def create_shoe(self):
         """
@@ -90,6 +91,53 @@ class Blackjack_shoe:
             num_decks_remaining = math.ceil(len(self.shoe)/52)
             sol.append([num_decks_remaining,running_count])
         return sol
+
+
+    def evaluate_lucky_ladies(self,card_values): 
+        dc1,dc2,mc1,mc2 = self.shoe[0],self.shoe[1],self.shoe[2],self.shoe[3]
+        val = -5
+        if card_values[mc1.split('_')[0] ] + card_values[mc2.split('_')[0] ] == 20: 
+            if mc1 == 'queen_of_hearts' and mc1 == mc2 and (card_values[dc1.split('_')[0] ] + card_values[dc2.split('_')[0] ] == 21): 
+                val = 5000
+            elif mc1 == 'queen_of_hearts' and mc1 == mc2:
+                val = 1000
+            elif mc1 == mc2: 
+                val = 125
+            elif mc1.split('_')[2] == mc2.split('_')[2]: 
+                val = 50
+            else: 
+                val = 20
+        self.money_won = self.money_won + val
+
+    def summarize_money_won(self): 
+        print('Num Decks Remaining is ' + str(self.num_decks_remaining))
+        print('Running Count is ' + str(self.running_count))
+        print('Amount of money won is ' + str(self.money_won))
+
+    def get_money_won(self): 
+        return self.money_won
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
