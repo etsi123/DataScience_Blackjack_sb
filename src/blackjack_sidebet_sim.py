@@ -31,6 +31,10 @@ class Blackjack_shoe:
         self.shoe=shoe
     
     def establish_count(self): 
+        """
+        This functioin establishes the specified count by removing cards from the shoe to achieve this goal. 
+        Currently setup for positive counts, which is what we want in virtually all cases. 
+        """
         if self.running_count > self.num_decks_remaining*5*4: 
             raise Exception("Not possible to achieve this count")  
         for i in range(self.running_count): 
@@ -41,10 +45,14 @@ class Blackjack_shoe:
         
     def get_shoe(self):
         return self.shoe
+
     def get_cards(self):
         return self.shoe[0],self.shoe[1],self.shoe[2],self.shoe[3]
     
     def evaluate_jackpot(self): 
+        """
+        Function to evaluate whether or not the jackpot was achieved. 
+        """
         dc1,dc2,mc1,mc2 = self.shoe[0],self.shoe[1],self.shoe[2],self.shoe[3]
         if (dc1.split('_')[0] == 'ace') or (dc2.split('_')[0] == 'ace'):
             if dc1.split('_')[2] == dc2.split('_')[2] == mc1.split('_')[2] == mc2.split('_')[2]: 
@@ -56,11 +64,19 @@ class Blackjack_shoe:
         return self.win_counter
     
     def summarize_results(self): 
+        """
+        Function to summarize how the simulation went for a specific running count / number of decks remaining 
+        combination. 
+        """
         print('Num Decks Remaining is ' + str(self.num_decks_remaining))
         print('Running Count is ' + str(self.running_count))
         print('Number of wins is ' + str(self.win_counter))
     
     def simulate_blackjack_shoe(self,deck_penetration):
+        """
+        Simulate a blackjack shoe and record frequency of specific running coount/number of decks remaining
+        combinations. 
+        """
         shuffle(self.shoe)
         sol = []
         numcards = len(self.shoe)
