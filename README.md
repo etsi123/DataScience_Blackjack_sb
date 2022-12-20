@@ -6,3 +6,4 @@ Intend to analyze specific games in notebooks and have the backend class be the 
 
 Games Analyzed: 
 1. Blackjack Progressive Jackpot side bet game. 
+2. Lucky Ladies
