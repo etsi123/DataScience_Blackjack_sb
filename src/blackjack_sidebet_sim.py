@@ -13,6 +13,7 @@ class Blackjack_shoe:
         self.small_cards=small_cards
         self.win_counter = win_counter
         self.money_won = 0
+        self.true_count = running_count / num_decks_remaining
 
     def create_shoe(self):
         """
@@ -28,7 +29,6 @@ class Blackjack_shoe:
         for i in range(self.num_decks_remaining): 
             unique_cards = list(self.counting_rules.keys())
             shoe = shoe + unique_cards
-
         self.shoe=shoe
     
     def establish_count(self): 
@@ -42,6 +42,7 @@ class Blackjack_shoe:
             ind = i % len(self.small_cards)
             card = self.small_cards[ind]
             self.shoe.remove(card)   
+        self.true_count = (self.running_count) / ((self.num_decks_remaining*52 - self.running_count)/52)
         shuffle(self.shoe)
         
     def get_shoe(self):
@@ -62,7 +63,7 @@ class Blackjack_shoe:
                     self.win_counter = self.win_counter + 1     
 
     def get_expectation_ranges(self): 
-        return self.win_counter
+        return self.win_counter,self.true_count
     
     def summarize_results(self): 
         """
@@ -113,9 +114,10 @@ class Blackjack_shoe:
         print('Num Decks Remaining is ' + str(self.num_decks_remaining))
         print('Running Count is ' + str(self.running_count))
         print('Amount of money won is ' + str(self.money_won))
+        print('True count is ' + str(self.true_count))
 
     def get_money_won(self): 
-        return self.money_won
+        return self.money_won,self.true_count
 
 
 
