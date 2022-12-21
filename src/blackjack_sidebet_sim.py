@@ -85,12 +85,13 @@ class Blackjack_shoe:
         cut_card = int(numcards*deck_penetration)
         running_count = 0
         num_decks_remaining = len(self.shoe) / 52
+        sol = [[num_decks_remaining,running_count,running_count/num_decks_remaining]]
         while len(self.shoe) >= (numcards - cut_card): 
             for i in range(0,10): #10 cards per round 
                 card = self.shoe.pop(0)
                 running_count = running_count + self.counting_rules[card] 
-            num_decks_remaining = math.ceil(len(self.shoe)/52)
-            sol.append([num_decks_remaining,running_count])
+            num_decks_remaining = len(self.shoe)/52
+            sol.append([num_decks_remaining,running_count,running_count/num_decks_remaining])
         return sol
 
 
