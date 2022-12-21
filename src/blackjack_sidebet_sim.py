@@ -96,18 +96,18 @@ class Blackjack_shoe:
 
     def evaluate_lucky_ladies(self,card_values): 
         dc1,dc2,mc1,mc2 = self.shoe[0],self.shoe[1],self.shoe[2],self.shoe[3]
-        val = -5
+        val = -1
         if card_values[mc1.split('_')[0] ] + card_values[mc2.split('_')[0] ] == 20: 
             if mc1 == 'queen_of_hearts' and mc1 == mc2 and (card_values[dc1.split('_')[0] ] + card_values[dc2.split('_')[0] ] == 21): 
-                val = 5000
-            elif mc1 == 'queen_of_hearts' and mc1 == mc2:
                 val = 1000
+            elif mc1 == 'queen_of_hearts' and mc1 == mc2:
+                val = 200
             elif mc1 == mc2: 
-                val = 125
+                val = 25
             elif mc1.split('_')[2] == mc2.split('_')[2]: 
-                val = 50
+                val = 10
             else: 
-                val = 20
+                val = 4
         self.money_won = self.money_won + val
 
     def summarize_money_won(self): 
