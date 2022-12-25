@@ -1,11 +1,12 @@
 import pandas as pd
 import numpy as np
+import random
 from random import shuffle
 import math
 
 class Blackjack_shoe:
     def __init__(self, num_decks_remaining,running_count,counting_rules,\
-                 small_cards,win_counter):
+                 small_cards,win_counter,true_count_cutoff = 7):
         self.num_decks_remaining = num_decks_remaining
         self.running_count = running_count
         self.counting_rules = counting_rules
@@ -14,6 +15,9 @@ class Blackjack_shoe:
         self.win_counter = win_counter
         self.money_won = 0
         self.true_count = running_count / num_decks_remaining
+        self.true_count_cutoff = true_count_cutoff
+        
+
 
     def create_shoe(self):
         """
@@ -30,6 +34,48 @@ class Blackjack_shoe:
             unique_cards = list(self.counting_rules.keys())
             shoe = shoe + unique_cards
         self.shoe=shoe
+        shuffle(self.shoe)
+    
+    def simulate_luckyladies(self,card_values):
+        shuffle(self.shoe)
+        sol = []
+        numcards = len(self.shoe)
+        cut_card = int(numcards*0.75)
+        running_count = 0
+        num_decks_remaining = len(self.shoe) / 52
+        true_count = running_count / num_decks_remaining
+        while len(self.shoe) >= (numcards - cut_card): 
+            dc1 = self.shoe.pop(0)
+            dc2 = self.shoe.pop(0)
+            mc1 = self.shoe.pop(0)
+            mc2 = self.shoe.pop(0)
+            if true_count >= self.true_count_cutoff:
+                print(true_count)
+                self.money_won = self.money_won + self.evaluate_lucky_ladies(card_values,dc1,dc2,mc1,mc2)
+                print(self.money_won)
+            running_count = running_count + self.counting_rules[dc1] + self.counting_rules[dc2] \
+            + self.counting_rules[mc1] +self.counting_rules[mc2]
+            for i in range(0,random.randint(0, 6)): #10 cards per round 
+                card = self.shoe.pop(0)
+                running_count = running_count + self.counting_rules[card] 
+            num_decks_remaining = len(self.shoe)/52
+            true_count = running_count/num_decks_remaining 
+        return self.money_won    
+    
+    def evaluate_lucky_ladies(self,card_values,dc1,dc2,mc1,mc2): 
+        val = -1
+        if card_values[mc1.split('_')[0] ] + card_values[mc2.split('_')[0] ] == 20: 
+            if mc1 == 'queen_of_hearts' and mc1 == mc2 and (card_values[dc1.split('_')[0] ] + card_values[dc2.split('_')[0] ] == 21): 
+                val = 1000
+            elif mc1 == 'queen_of_hearts' and mc1 == mc2:
+                val = 200
+            elif mc1 == mc2: 
+                val = 25
+            elif mc1.split('_')[2] == mc2.split('_')[2]: 
+                val = 10
+            else: 
+                val = 4
+        return val        
     
     def establish_count(self): 
         """
@@ -87,7 +133,7 @@ class Blackjack_shoe:
         num_decks_remaining = len(self.shoe) / 52
         sol = [[num_decks_remaining,running_count,running_count/num_decks_remaining]]
         while len(self.shoe) >= (numcards - cut_card): 
-            for i in range(0,10): #10 cards per round 
+            for i in range(0,random.randint(0, 15)): #10 cards per round 
                 card = self.shoe.pop(0)
                 running_count = running_count + self.counting_rules[card] 
             num_decks_remaining = len(self.shoe)/52
@@ -95,21 +141,6 @@ class Blackjack_shoe:
         return sol
 
 
-    def evaluate_lucky_ladies(self,card_values): 
-        dc1,dc2,mc1,mc2 = self.shoe[0],self.shoe[1],self.shoe[2],self.shoe[3]
-        val = -1
-        if card_values[mc1.split('_')[0] ] + card_values[mc2.split('_')[0] ] == 20: 
-            if mc1 == 'queen_of_hearts' and mc1 == mc2 and (card_values[dc1.split('_')[0] ] + card_values[dc2.split('_')[0] ] == 21): 
-                val = 1000
-            elif mc1 == 'queen_of_hearts' and mc1 == mc2:
-                val = 200
-            elif mc1 == mc2: 
-                val = 25
-            elif mc1.split('_')[2] == mc2.split('_')[2]: 
-                val = 10
-            else: 
-                val = 4
-        self.money_won = self.money_won + val
 
     def summarize_money_won(self): 
         print('Num Decks Remaining is ' + str(self.num_decks_remaining))
